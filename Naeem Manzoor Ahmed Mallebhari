@@ -1,7 +1,7 @@
-echo "# Nisar_Mavenir" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/Nisar-mavenir/Nisar_Mavenir.git
-git push -u origin main
+1.After deleteing only Vote POD nothing haapend on GUI and i voted  successfully. So its indiacting nothing happend on application end. 
+After deleting Volte pod its recreated.
+2.Same observations after deleting worker pod.
+3. After deleting DB pod in GUI result is cleared. 
+   In CLI DB pod recreated.
+4. As DB pod stored all data base including reslu, so once we delete DB pod all data is refreshed (Clear).
+5. We saw that if other than DB pod deleted no issue observed. Only when DB pod deleted all data stored in DB is cleared. 
