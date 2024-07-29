@@ -1,0 +1,49 @@
+To diagnose why your application is not reachable at the NodePort, you should follow a systematic approach to identify and resolve the issue. Here’s a sequential checklist of steps you can take to troubleshoot and resolve the problem:
+
+1. Check the Deployment and ReplicaSet
+Ensure that your Deployment and ReplicaSet are correctly configured and running.
+kubectl get deployments
+kubectl get replicasets
+Verify that the desired number of pods are running:
+kubectl get pods
+If no pods are running or the status is not Running, investigate further by describing the pod:
+kubectl describe pod <pod-name>
+Look for events and error messages.
+2. Verify Container and Application Health
+Check if the container inside the pod is running and whether the application is listening on the expected port (8000).
+kubectl exec -it <pod-name> -- netstat -tuln | grep 8000
+Ensure the application inside the container is listening on port 8000.
+3. Check the NodePort Service Configuration
+Verify the NodePort service configuration to ensure it is properly set up.
+kubectl get svc
+Look for the NodePort service and describe it:
+kubectl describe svc <service-name>
+Ensure that the service is correctly pointing to the pods and the port configuration is correct:
+Port: Should match the port your application is listening on (8000).
+TargetPort: Should match the port your application is using inside the pod.
+NodePort: Should be within the valid range (30000-32767).
+4. Check Service Endpoints
+Verify that the service has endpoints:
+kubectl get endpoints <service-name>
+Ensure that the endpoints are listed and match the IP addresses and ports of your pods.
+5. Check Network Accessibility
+Ensure that the NodePort is accessible from outside the cluster. Note the NodePort value from the service description and try to access it from your local machine or a remote client:
+curl <node-ip>:<node-port>
+Replace <node-ip> with the IP address of one of your cluster nodes and <node-port> with the NodePort value.
+6. Check Node Firewall and Security Groups
+Ensure that there are no firewall rules or security group settings blocking traffic to the NodePort on the cluster nodes.
+On cloud providers, check the security group rules.
+On-premises, check the firewall rules on the nodes.
+7. Inspect Pod Logs
+Check the logs of the pods to ensure that the application is starting correctly and not encountering any issues:
+kubectl logs <pod-name>
+8. Verify Network Policies
+If you have Network Policies configured, ensure they are not blocking traffic to your application.
+kubectl get networkpolicies
+Review the policies to make sure they allow traffic to the NodePort.
+9. Check Kubernetes Cluster and DNS
+Make sure there are no issues with the Kubernetes cluster itself and that DNS is resolving correctly if used.
+kubectl cluster-info
+kubectl get nodes
+10. Review Application Configuration
+Finally, verify the application configuration to ensure it is correctly configured to bind to the expected IP and port (0.0.0.0:8000 or similar).
